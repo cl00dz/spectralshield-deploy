@@ -64,3 +64,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build & push Docker image
+        run: |
+          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
+          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
+          echo "✅ Docker image built & pushed to GHCR"
