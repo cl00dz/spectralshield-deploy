@@ -1,5 +1,8 @@
 name: Sync Code & Deploy
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: "*/2 * * * *"  # every 2 minutes
