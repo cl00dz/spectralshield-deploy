@@ -5,12 +5,16 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   sync-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug start
+        run: echo "🚀 Workflow triggered — starting deployment..."
+
       - name: Checkout deploy repo
         uses: actions/checkout@v3
         with:
@@ -38,23 +42,32 @@ jobs:
           git config user.email "ci@github"
           git add app/
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "✅ No changes to commit"
           else
             git commit -m "Sync from code repo"
             git remote set-url origin https://${{ secrets.DEPLOY_REPO_PAT }}@github.com/cl00dz/spectralshield-deploy.git
             git push origin main --force
+            echo "✅ Changes pushed to deploy repo"
           fi
 
+      - name: Enable Docker
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to GHCR
-        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build & push Docker image
         run: |
           docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
+          echo "✅ Docker image built & pushed"
 
       - name: Trigger Portainer redeploy webhook
         if: ${{ secrets.PORTAINER_WEBHOOK != '' }}
         run: |
-          curl -X POST "${{ secrets.PORTAINER_WEBHOOK }}"
-
+          curl -fsSL "${{ secrets.PORTAINER_WEBHOOK }}"
+          echo "✅ Portainer redeploy triggered"
