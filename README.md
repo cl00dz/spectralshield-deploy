@@ -1,42 +1,86 @@
-# 🎧 SpectralShield — Self-Hosted Audio Watermarking Engine
+# 🎧 SpectraShield — Self-Hosted Audio Watermarking
 
-SpectralShield is a privacy-first, self-hosted tool for embedding invisible watermarks into your audio files.
-
-Your content stays on your machine — no cloud processing, no tracking, no data collection. Ever.
-
----
-
-## ✨ Features
-
-- 🔒 100% Local — never uploads your files anywhere
-- 🎵 Invisible audio watermarking
-- 🧠 Designed for creators who need proof of authorship
-- 🖥️ Windows, macOS, and Linux support
-- 🐳 Runs inside Docker for security & isolation
-- ♻️ Self-updating deployment script
-- ⚡ Simple setup, no technical experience needed
+SpectraShield helps you embed invisible watermarks into audio — privately, on your own machine.  
+No cloud. No telemetry. Your files never leave your system.
 
 ---
 
-## 🚀 Quick Install
+## 🚀 Install (Pick one)
 
-### ✅ **Windows**
+### 🪟 Windows
+- Download the latest **SpectraShield-Installer.exe** from Releases
+- Run the installer (creates Start Menu & Desktop shortcuts)
+- Or run portable script:
+  ```powershell
+  ./deploy.ps1
+🍏 macOS
 
-1) Download the latest release ZIP:  
-👉 https://github.com/cl00dz/spectralshield-deploy/releases/latest/download/spectralshield.zip
+With Homebrew (after tap is published):
 
-2) Extract the folder
+brew tap cl00dz/spectrashield
+brew install spectrashield
 
-3) Right-click `deploy.ps1` → **Run with PowerShell**
-
-> Automatically installs, configures, and launches SpectralShield
-
----
-
-### 🍏 **macOS**
-
-Open Terminal inside the extracted folder:
-
-```bash
+Or from ZIP:
 chmod +x deploy.sh
 ./deploy.sh
+
+🐧 Linux
+
+Debian/Ubuntu (.deb once published) or RPM for Fedora/RHEL
+
+Or from ZIP:
+
+chmod +x deploy.sh
+./deploy.sh
+
+🌐 Use
+
+After install:
+
+App runs at http://localhost:8080
+
+Default port is 8080 (change via .env)
+
+Update anytime:
+
+./deploy.sh
+# or
+./deploy.ps1
+
+
+Stop:
+
+docker compose down
+
+
+Uninstall:
+
+docker compose down then delete the folder (or remove the package).
+
+⚙️ Requirements
+
+Docker Desktop (Windows/macOS) or Docker Engine (Linux)
+
+Docker Compose plugin
+
+🧩 Files
+
+deploy.sh / deploy.ps1 — one-command installer/runner
+
+docker-compose.yml — container definition
+
+assets/ — icons & branding
+
+installers/ — packaging (Windows/macOS/Linux)
+
+❤️ Support
+
+Star ⭐ this repo if it helps
+
+Open issues for bugs/feature requests
+
+## 7) CI note (image naming)
+
+Be sure your CI builds to: `ghcr.io/cl00dz/spectrashield:latest` (we previously used Spectral; now **Spectra**).
+
+If you want, I can paste a **cleaned build workflow** next.
