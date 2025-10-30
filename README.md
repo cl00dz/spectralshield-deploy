@@ -1,17 +1,51 @@
-# 🚀 SpectralShield Deployment Repository
+# 🎧 SpectralShield — Self-Hosted Audio Watermarking Engine
 
-This repo maintains the official SpectralShield container build system.
+SpectralShield is a privacy-first, self-hosted audio watermarking engine.  
+Run it locally, keep your audio content private, and add invisible forensic watermarks to your sounds.
 
-✅ Automatically builds Docker images  
-✅ Publishes `latest`, versioned, and commit-tag images  
-✅ Creates GitHub Releases with docker-compose included  
-✅ Supports one-command deploy via `deploy.sh`
+No cloud. No data collection. Your files never leave your machine.
 
 ---
 
-## 🏁 Quick Start (Self-host)
+## ✨ Features
+
+- 🔒 100% Local — no servers, no tracking
+- 🎵 Embeds invisible audio watermarks
+- 🧠 High-fidelity DSP watermarking algorithm
+- ♻️ Automatic self-updates
+- 🖥️ Works on Windows, macOS, Linux
+- 🐳 Docker powered — clean sandboxed environment
+- ⚡ Easy installer scripts — no manual setup
+- 🚀 Designed for creators, audio libraries, labels, & rights management teams
+
+---
+
+## 🚀 Quick Install
+
+### ✅ **Windows (Recommended)**
+
+1. **Download ZIP**
+https://github.com/cl00dz/spectralshield-deploy/releases/latest/download/spectralshield.zip
+
+2. Extract it
+
+3. Run:
+
+**Double-click:**
+deploy.ps1
+
+*(or Right-click → Run with PowerShell)*
+
+> The app will auto-install, auto-update, and launch itself.
+
+---
+
+### 🍏 **macOS**
+
+Open Terminal in the extracted folder and run:
 
 ```bash
-git clone https://github.com/YOURUSER/spectralshield-deploy
-cd spectralshield-deploy
+chmod +x deploy.sh
 ./deploy.sh
+
+
