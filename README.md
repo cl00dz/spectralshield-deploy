@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icon-256.png" width="120" />
+  <img src="assets/icon.ico" width="120" />
 </p>
 
 <h1 align="center">SpectraShield</h1>
