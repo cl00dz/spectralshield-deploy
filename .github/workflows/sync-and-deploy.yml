@@ -1,19 +1,21 @@
-name: Sync Code & Deploy
+name: Sync Code & Build Image
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 permissions:
   contents: write
   packages: write
 
 jobs:
-  sync-and-deploy:
+  sync-and-build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Start
-        run: echo "🚀 Workflow triggered — starting deployment..."
+        run: echo "🚀 Starting sync and build"
 
       - name: Checkout deploy repo
         uses: actions/checkout@v3
@@ -37,18 +39,18 @@ jobs:
             --exclude 'README.md' \
             temp_code/ app/
 
-      - name: Commit & Push back to deploy repo
+      - name: Commit & Push updated app files
         run: |
           git config user.name "CI Bot"
           git config user.email "ci@github"
           git add app/
           if git diff --cached --quiet; then
-            echo "✅ No changes to commit"
+            echo "✅ No file changes to sync"
           else
             git commit -m "Sync from code repo"
             git remote set-url origin https://${{ secrets.DEPLOY_REPO_PAT }}@github.com/cl00dz/spectralshield-deploy.git
             git push origin main --force
-            echo "✅ Changes pushed to deploy repo"
+            echo "✅ Deploy repo updated"
           fi
 
       - name: Set up Docker
@@ -62,17 +64,3 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build & push Docker image
-        run: |
-          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
-          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
-          echo "✅ Docker image built & pushed"
-
-      - name: Trigger Portainer redeploy webhook
-        run: |
-          if [ -n "${{ secrets.PORTAINER_WEBHOOK }}" ]; then
-            echo "Triggering Portainer webhook..."
-            curl -fsSL "${{ secrets.PORTAINER_WEBHOOK }}"
-            echo "✅ Portainer redeploy triggered"
-          else
-            echo "⚠️ No webhook found, skipping redeploy."
-          fi
