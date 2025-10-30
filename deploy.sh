@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-echo "📦 Pulling latest SpectralShield image..."
-docker pull ghcr.io/$GHCR_USERNAME/spectralshield:latest
+echo "📦 Pulling latest SpectraShield image..."
+: "${GHCR_USERNAME:=cl00dz}"
+docker pull "ghcr.io/${GHCR_USERNAME}/spectrashield:latest"
 
-echo "🚀 Starting container..."
+if [ ! -f ".env" ]; then
+  echo "HOST_PORT=8080" > .env
+  echo "⚙️ Created .env (HOST_PORT=8080)"
+fi
+
+echo "🚀 Starting SpectraShield..."
 docker compose up -d
-
-echo "✅ SpectralShield is running!"
+echo "✅ Running at http://localhost:${HOST_PORT:-8080}"
