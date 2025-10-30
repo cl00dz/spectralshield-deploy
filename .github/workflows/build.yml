@@ -52,9 +52,14 @@ jobs:
         run: |
           rm -rf spectralshield
           mkdir spectralshield
+
+          # Copy installer + compose
           cp docker-compose.yml spectralshield/
           cp deploy.ps1 spectralshield/
           cp README.md spectralshield/ || true
+
+          # Copy app folder
+          cp -r app spectralshield/app
 
       - name: Create release zip
         run: zip -r spectralshield.zip spectralshield
@@ -66,14 +71,9 @@ jobs:
           tag_name: ${{ steps.version.outputs.new }}
           name: SpectralShield ${{ steps.version.outputs.new }}
           body: |
-            ✅ Auto-built SpectralShield release
-            📦 Includes Windows deployment package
-
-            Tags:
-            • latest
-            • ${{ steps.version.outputs.new }}
-            • ${{ steps.version.outputs.sha }}
-          files: |
-            spectralshield.zip
+            ✅ Auto-built SpectralShield Release
+            📦 Fully packaged deploy bundle
+            🐳 Docker image loaded with production build
+          files: spectralshield.zip
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOY_REPO_PAT }}
