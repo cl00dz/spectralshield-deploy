@@ -2,7 +2,7 @@
   <img src="assets/download.svg" width="120" />
 </p>
 
-<h1 align="center">SpectraShield</h1>
+<h1 align="center">SpectralShield</h1>
 <p align="center"><b>Self-Hosted Audio Watermarking Engine</b></p>
 
 <p align="center">Protect your audio. Own your IP. Keep your files private.</p>
@@ -10,7 +10,7 @@
 <p align="center">
   <a href="#">Website</a> •
   <a href="#">Docs</a> •
-  <a href="https://github.com/cl00dz/spectrashield-deploy/releases">Releases</a> •
+  <a href="https://github.com/cl00dz/spectralshield-deploy/releases">Releases</a> •
   <a href="#-installation">Installation</a>
 </p>
 
@@ -18,7 +18,7 @@
 
 ## 🎯 Overview
 
-**SpectraShield** is an offline, self-hosted audio watermarking engine built for:
+**SpectralShield** is an offline, self-hosted audio watermarking engine built for:
 
 - Music producers & labels  
 - Audio engineers & studios  
@@ -60,21 +60,18 @@ Port | `8080` by default
 
 1️⃣ Download the latest release:
 
-👉 https://github.com/cl00dz/spectrashield-deploy/releases
+👉 https://github.com/cl00dz/spectralshield-deploy/releases
 
-2️⃣ Run `SpectraShield-Installer.exe`  
-3️⃣ Open SpectraShield from the Start Menu or Desktop shortcut
+2️⃣ Run `SpectralShield-Installer.exe`  
+3️⃣ Open SpectralShield from the Start Menu or Desktop shortcut  
 
-Done. ✅  
-Your local SpectraShield server is running.
+✅ Done — your local SpectralShield server is running.
 
 ---
 
 ### ⚡ Windows — PowerShell Deployment (No EXE Installer)
 
-If you prefer script install:
-
 ```powershell
-git clone https://github.com/cl00dz/spectrashield-deploy.git
-cd spectrashield-deploy
+git clone https://github.com/cl00dz/spectralshield-deploy.git
+cd spectralshield-deploy
 ./deploy.ps1
