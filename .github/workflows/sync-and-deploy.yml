@@ -32,17 +32,18 @@ jobs:
           --exclude 'README.md' \
           temp_code/ app/
 
-    - name: Commit sync to deploy repo (only if changed)
-      run: |
-        git config user.name "CI Bot"
-        git config user.email "ci-bot@github"
-        if [ -n "$(git status --porcelain)" ]; then
-          git add app/
-          git commit -m "Sync from code repo"
-          git push
-        else
-          echo "No changes to commit."
-        fi
+   - name: Commit sync to deploy repo (only if changed)
+  run: |
+    git config user.name "CI Bot"
+    git config user.email "ci-bot@github"
+    if [ -n "$(git status --porcelain)" ]; then
+      git add app/
+      git commit -m "Sync from code repo"
+      git remote set-url origin https://${{ secrets.DEPLOY_REPO_PAT }}@github.com/cl00dz/spectralshield-deploy.git
+      git push origin main
+    else
+      echo "No changes to commit."
+    fi
 
     - name: Log in to GHCR
       run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
