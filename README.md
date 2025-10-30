@@ -1,86 +1,74 @@
-# 🎧 SpectraShield — Self-Hosted Audio Watermarking
+<p align="center">
+  <img src="assets/icon-256.png" width="120" />
+</p>
 
-SpectraShield helps you embed invisible watermarks into audio — privately, on your own machine.  
-No cloud. No telemetry. Your files never leave your system.
+<h1 align="center">SpectraShield</h1>
+<p align="center"><b>Self-Hosted Audio Watermarking Engine</b></p>
+
+<p align="center">Protect your audio. Own your intellectual property. Keep your files private.</p>
+
+<p align="center">
+  <a href="#">Website</a> •
+  <a href="#">Docs</a> •
+  <a href="https://github.com/cl00dz/spectrashield-deploy/releases">Releases</a> •
+  <a href="#-install">Install</a>
+</p>
 
 ---
 
-## 🚀 Install (Pick one)
+## 🎯 What is SpectraShield?
 
-### 🪟 Windows
-- Download the latest **SpectraShield-Installer.exe** from Releases
-- Run the installer (creates Start Menu & Desktop shortcuts)
-- Or run portable script:
-  ```powershell
-  ./deploy.ps1
-🍏 macOS
+SpectraShield is a **private, offline, self-hosted watermarking tool** for audio creators, labels, and studios.
 
-With Homebrew (after tap is published):
+It embeds **invisible forensic watermarks** into sound files — providing proof of authorship and traceability **without uploading your content to the cloud**.
 
-brew tap cl00dz/spectrashield
-brew install spectrashield
+✅ Local processing  
+✅ Zero telemetry  
+✅ Secure by design  
+✅ Creator-focused  
 
-Or from ZIP:
-chmod +x deploy.sh
-./deploy.sh
+---
 
-🐧 Linux
+## ✨ Key Features
 
-Debian/Ubuntu (.deb once published) or RPM for Fedora/RHEL
+| Feature | Description |
+|--------|------------|
+🔒 100% offline | No servers, no data collection  
+🎵 Invisible watermarks | Designed for audio protection  
+🛠️ Runs everywhere | Windows, macOS, Linux  
+🐳 Containerized | Fully sandboxed using Docker  
+🚀 Fast install | One-command setup  
+♻️ Self-updating | Always stays current  
+⚙️ Configurable | Set ports & preferences easily  
 
-Or from ZIP:
+---
 
-chmod +x deploy.sh
-./deploy.sh
+## 📦 System Requirements
 
-🌐 Use
+| Component | Requirement |
+|---|---|
+OS | Windows, macOS, or Linux  
+Runtime | Docker Desktop / Docker Engine  
+Ports | Default `8080` (customizable)  
 
-After install:
+> No cloud services required. Works offline.
 
-App runs at http://localhost:8080
+---
 
-Default port is 8080 (change via .env)
+## 🚀 Install
 
-Update anytime:
+### 🪟 **Windows**
 
-./deploy.sh
-# or
+#### Option A — Installer
+Download the latest `SpectraShield-Installer.exe` from releases:
+
+👉 https://github.com/cl00dz/spectrashield-deploy/releases
+
+Launch & follow the wizard.  
+Creates Start Menu & Desktop shortcuts.
+
+#### Option B — Script
+Run inside extracted folder:
+
+```powershell
 ./deploy.ps1
-
-
-Stop:
-
-docker compose down
-
-
-Uninstall:
-
-docker compose down then delete the folder (or remove the package).
-
-⚙️ Requirements
-
-Docker Desktop (Windows/macOS) or Docker Engine (Linux)
-
-Docker Compose plugin
-
-🧩 Files
-
-deploy.sh / deploy.ps1 — one-command installer/runner
-
-docker-compose.yml — container definition
-
-assets/ — icons & branding
-
-installers/ — packaging (Windows/macOS/Linux)
-
-❤️ Support
-
-Star ⭐ this repo if it helps
-
-Open issues for bugs/feature requests
-
-## 7) CI note (image naming)
-
-Be sure your CI builds to: `ghcr.io/cl00dz/spectrashield:latest` (we previously used Spectral; now **Spectra**).
-
-If you want, I can paste a **cleaned build workflow** next.
