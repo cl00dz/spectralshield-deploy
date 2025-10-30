@@ -1,0 +1,13 @@
+# Submit to https://github.com/microsoft/winget-pkgs after building the .exe
+Id: cl00dz.SpectraShield
+Publisher: cl00dz
+Name: SpectraShield
+AppMoniker: spectrashield
+Version: 1.0.0
+License: MIT
+Installers:
+  - Architecture: x64
+    InstallerType: exe
+    InstallerUrl: https://github.com/cl00dz/spectralshield-deploy/releases/download/v1.0.0/SpectraShield-Installer.exe
+    InstallerSha256: <FILL_SHA256_OF_EXE>
+ShortDescription: Self-hosted audio watermarking app.
