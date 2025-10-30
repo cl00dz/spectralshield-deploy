@@ -49,12 +49,6 @@ jobs:
         docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
         docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
 
-    - name: SSH & redeploy container
+      - name: Trigger Portainer redeploy webhook
       run: |
-        echo "${{ secrets.SSH_KEY }}" > key.pem
-        chmod 600 key.pem
-        ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-          cd /opt/spectralshield &&
-          docker compose pull &&
-          docker compose up -d
-        "
+        curl -X POST "${{ secrets.PORTAINER_WEBHOOK }}"
