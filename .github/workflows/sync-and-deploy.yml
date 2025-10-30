@@ -11,48 +11,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout deploy repo
-      uses: actions/checkout@v3
-      with:
-        persist-credentials: false
+      - name: Checkout deploy repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
-    - name: Clone latest code repo
-      run: |
-        rm -rf temp_code
-        git clone https://${{ secrets.CODE_REPO_PAT }}@github.com/cl00dz/spectralshield-code.git temp_code
+      - name: Clone latest code repo
+        run: |
+          rm -rf temp_code
+          git clone https://${{ secrets.CODE_REPO_PAT }}@github.com/cl00dz/spectralshield-code.git temp_code
 
-    - name: Sync application files
-      run: |
-        mkdir -p app
-        rsync -av --delete \
-          --exclude '.git' \
-          --exclude '.github' \
-          --exclude 'Dockerfile' \
-          --exclude 'docker-compose.yml' \
-          --exclude 'README.md' \
-          temp_code/ app/
+      - name: Sync application files
+        run: |
+          mkdir -p app
+          rsync -av --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'Dockerfile' \
+            --exclude 'docker-compose.yml' \
+            --exclude 'README.md' \
+            temp_code/ app/
 
-    - name: Commit & Push back to deploy repo
-      run: |
-        git config user.name "CI Bot"
-        git config user.email "ci@github"
-        git add app/
-        if git diff --cached --quiet; then
-          echo "No changes to commit"
-        else
-          git commit -m "Sync from code repo"
-          git remote set-url origin https://${{ secrets.DEPLOY_REPO_PAT }}@github.com/cl00dz/spectralshield-deploy.git
-          git push origin main --force
-        fi
+      - name: Commit & Push back to deploy repo
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "ci@github"
+          git add app/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Sync from code repo"
+            git remote set-url origin https://${{ secrets.DEPLOY_REPO_PAT }}@github.com/cl00dz/spectralshield-deploy.git
+            git push origin main --force
+          fi
 
-    - name: Log in to GHCR
-      run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
-    - name: Build & push Docker image
-      run: |
-        docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
-        docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
+      - name: Build & push Docker image
+        run: |
+          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
+          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
 
-    - name: Trigger Portainer redeploy webhook
-      run: |
-        curl -X POST "${{ secrets.PORTAINER_WEBHOOK }}"
+      - name: Trigger Portainer redeploy webhook
+        if: ${{ secrets.PORTAINER_WEBHOOK != '' }}
+        run: |
+          curl -X POST "${{ secrets.PORTAINER_WEBHOOK }}"
+
