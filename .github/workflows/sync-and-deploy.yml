@@ -54,7 +54,7 @@ jobs:
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
 
       - name: Trigger Portainer redeploy webhook
-        if: ${{ secrets.PORTAINER_WEBHOOK != 'https://port.obisidanclouds.org/api/webhooks/7795e395-878c-4078-b3c0-ac328d89398c' }}
+        if: ${{ secrets.PORTAINER_WEBHOOK != '' }}
         run: |
           curl -X POST "${{ secrets.PORTAINER_WEBHOOK }}"
 
