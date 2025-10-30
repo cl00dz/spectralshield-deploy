@@ -5,70 +5,76 @@
 <h1 align="center">SpectraShield</h1>
 <p align="center"><b>Self-Hosted Audio Watermarking Engine</b></p>
 
-<p align="center">Protect your audio. Own your intellectual property. Keep your files private.</p>
+<p align="center">Protect your audio. Own your IP. Keep your files private.</p>
 
 <p align="center">
   <a href="#">Website</a> •
   <a href="#">Docs</a> •
   <a href="https://github.com/cl00dz/spectrashield-deploy/releases">Releases</a> •
-  <a href="#-install">Install</a>
+  <a href="#-installation">Installation</a>
 </p>
 
 ---
 
-## 🎯 What is SpectraShield?
+## 🎯 Overview
 
-SpectraShield is a **private, offline, self-hosted watermarking tool** for audio creators, labels, and studios.
+**SpectraShield** is an offline, self-hosted audio watermarking engine built for:
 
-It embeds **invisible forensic watermarks** into sound files — providing proof of authorship and traceability **without uploading your content to the cloud**.
+- Music producers & labels  
+- Audio engineers & studios  
+- Content creators & podcasters  
+
+Your audio never leaves your machine — **no cloud, no telemetry, no tracking.**
 
 ✅ Local processing  
-✅ Zero telemetry  
-✅ Secure by design  
-✅ Creator-focused  
+✅ Forensic-grade invisible watermarking  
+✅ Fast, private, secure  
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
-| Feature | Description |
-|--------|------------|
-🔒 100% offline | No servers, no data collection  
-🎵 Invisible watermarks | Designed for audio protection  
-🛠️ Runs everywhere | Windows, macOS, Linux  
-🐳 Containerized | Fully sandboxed using Docker  
-🚀 Fast install | One-command setup  
-♻️ Self-updating | Always stays current  
-⚙️ Configurable | Set ports & preferences easily  
-
----
-
-## 📦 System Requirements
-
-| Component | Requirement |
+| Capability | Description |
 |---|---|
-OS | Windows, macOS, or Linux  
-Runtime | Docker Desktop / Docker Engine  
-Ports | Default `8080` (customizable)  
-
-> No cloud services required. Works offline.
+🔒 100% offline | No cloud, no tracking  
+🎵 Invisible audio watermarks | Forensic traceability  
+🪟 Windows installer | Zero-config setup  
+🐳 Docker ready | Run anywhere  
+⚙️ Configurable | Change ports/settings easily  
 
 ---
 
-## 🚀 Install
+## 📦 Requirements
 
-### 🪟 **Windows**
+| Requirement | Details |
+|---|---|
+OS | Windows 10/11 or Docker-capable OS  
+Docker | Docker Desktop (Windows/macOS) or Docker Engine (Linux)  
+Port | `8080` by default  
 
-#### Option A — Installer
-Download the latest `SpectraShield-Installer.exe` from releases:
+---
+
+## 🚀 Installation
+
+### 🪟 Windows — One-Click Installer
+
+1️⃣ Download the latest release:
 
 👉 https://github.com/cl00dz/spectrashield-deploy/releases
 
-Launch & follow the wizard.  
-Creates Start Menu & Desktop shortcuts.
+2️⃣ Run `SpectraShield-Installer.exe`  
+3️⃣ Open SpectraShield from the Start Menu or Desktop shortcut
 
-#### Option B — Script
-Run inside extracted folder:
+Done. ✅  
+Your local SpectraShield server is running.
+
+---
+
+### ⚡ Windows — PowerShell Deployment (No EXE Installer)
+
+If you prefer script install:
 
 ```powershell
+git clone https://github.com/cl00dz/spectrashield-deploy.git
+cd spectrashield-deploy
 ./deploy.ps1
