@@ -1,8 +1,6 @@
 name: Sync Code & Deploy
 
- on:
-#  schedule:
-#    - cron: "*/2 * * * *"
+on:
   workflow_dispatch:
 
 permissions:
