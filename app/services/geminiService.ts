@@ -1,6 +1,5 @@
-
-// DEVELOPER NOTE: This service performs all operations locally in the browser
-// using the Web Crypto API. It does not use any external AI services.
+// NOTE: This service is responsible for local cryptographic operations.
+// It does not use any AI or external services for its core functionality.
 
 import { SignatureResult, VerificationResult } from '../types';
 
@@ -105,6 +104,15 @@ const generateUUID = (): string => {
   });
 };
 
+// Helper to check for Web Crypto API availability in a secure context.
+const checkCryptoAvailability = () => {
+    if (typeof crypto === 'undefined' || !crypto.subtle || typeof crypto.subtle.digest !== 'function') {
+      throw new Error(
+        "Web Crypto API is not available. This feature requires a secure context (like HTTPS or localhost). Please ensure the application is accessed securely.",
+      );
+    }
+  };
+
 // Use Web Crypto API for a robust, browser-native hashing function.
 const calculateHash = async (buffer: ArrayBuffer, text: string): Promise<string> => {
   const textEncoder = new TextEncoder();
@@ -171,6 +179,7 @@ export const generateSignatureAndId = async (
   audioFile: File,
   watermarkText: string
 ): Promise<{ signatureResult: SignatureResult; watermarkedFile: Blob }> => {
+  checkCryptoAvailability();
   const originalBuffer = await audioFile.arrayBuffer();
 
   // PRE-DETECTION STEP: Check if the file is already watermarked.
@@ -210,6 +219,7 @@ export const verifySignature = async (
   verificationFile: File,
   uniqueIdentifier: string
 ): Promise<VerificationResult> => {
+  checkCryptoAvailability();
   // decodeIdentifier can now throw for corrupted IDs.
   // This will be caught by the handler in App.tsx.
   const decodedPayload = decodeIdentifier(uniqueIdentifier);
