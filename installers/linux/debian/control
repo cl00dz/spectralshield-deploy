@@ -1,1 +1,10 @@
+Package: spectrashield
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: docker.io | docker-ce | docker, docker-compose-plugin
+Maintainer: cl00dz <noreply@example.com>
+Description: SpectraShield self-hosted audio watermarking app
+ A simple launcher package that deploys SpectraShield via Docker Compose.
 
