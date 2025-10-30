@@ -1,0 +1,5 @@
+{
+  "name": "SpectralShield",
+  "description": "An application to embed a spectral watermark signature into audio files. Upload your audio, provide a watermark text, and download a package containing your audio file and its unique spectral signature, verifiable only through its generated identifier. This helps in tracking and preventing unauthorized leaks.",
+  "requestFramePermissions": []
+}
