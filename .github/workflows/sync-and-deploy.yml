@@ -49,6 +49,6 @@ jobs:
         docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
         docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
 
-      - name: Trigger Portainer redeploy webhook
+    - name: Trigger Portainer redeploy webhook
       run: |
         curl -X POST "${{ secrets.PORTAINER_WEBHOOK }}"
