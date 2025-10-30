@@ -1,18 +1,28 @@
-# Build stage
+# -------------------
+# Build Frontend
+# -------------------
 FROM node:18 AS builder
 WORKDIR /app
 
-COPY app/package*.json ./
-RUN npm install
+# Copy the app
+COPY app/ ./
 
-COPY app .
-RUN npm run build
+# Install & build
+RUN npm install && npm run build
 
-# Production nginx stage
+# -------------------
+# NGINX Stage
+# -------------------
 FROM nginx:alpine
+
+# Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy built app to nginx web root
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Expose port
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
 
+# Start NGINX
+CMD ["nginx", "-g", "daemon off;"]
