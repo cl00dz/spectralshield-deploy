@@ -21,9 +21,13 @@ if (-not $dockerInstalled) {
     Write-Host "🐳 Docker Desktop not found — installing..." -ForegroundColor Red
     $installer = "$env:TEMP\DockerInstaller.exe"
     Invoke-WebRequest "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe" -OutFile $installer
-
+    
     Start-Process $installer -ArgumentList "install --quiet" -Wait
     Write-Host "✅ Docker Desktop installed" -ForegroundColor Green
+
+    Write-Host "🔄 Launching Docker Desktop for first-time setup..." -ForegroundColor Yellow
+    Start-Process "$dockerPath"
+    Write-Host "📌 You may need to reboot after initial Docker setup." -ForegroundColor Magenta
 } else {
     Write-Host "✅ Docker Desktop already installed" -ForegroundColor Green
 }
@@ -32,7 +36,7 @@ if (-not $dockerInstalled) {
 # Start Docker Desktop
 # -------------------------------
 Write-Host "▶️ Starting Docker Desktop..." -ForegroundColor Yellow
-Start-Process "$Env:ProgramFiles\Docker\Docker\Docker Desktop.exe"
+Start-Process "$dockerPath"
 Start-Sleep -Seconds 5
 
 # -------------------------------
@@ -45,20 +49,15 @@ $retry = 0
 
 while ($retry -lt $maxRetries) {
     if (ProgramExists "docker") {
-        try {
-            docker info > $null 2>&1
-            if ($LASTEXITCODE -eq 0) {
-                Write-Host "✅ Docker Engine Ready!" -ForegroundColor Green
-                break
-            }
-        } catch {}
+        docker info > $null 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "✅ Docker Engine Ready!" -ForegroundColor Green
+            break
+        }
     }
 
     Start-Sleep -Seconds 2
     $retry++
-    if ($retry % 10 -eq 0) {
-        Write-Host "⌛ Still waiting for Docker..." -ForegroundColor DarkYellow
-    }
 }
 
 if ($retry -ge $maxRetries) {
@@ -93,7 +92,7 @@ docker rm spectralshield 2>$null
 
 docker run -d `
   --name spectralshield `
-  -p 8080:8080 `
+  -p 8080:80 `   # ✅ Fixed port mapping
   ghcr.io/cl00dz/spectralshield:latest
 
 Write-Host "✅ SpectralShield is running!" -ForegroundColor Green
