@@ -12,12 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Debug start
+      - name: Start
         run: echo "🚀 Workflow triggered — starting deployment..."
 
       - name: Checkout deploy repo
         uses: actions/checkout@v3
         with:
+          repository: cl00dz/spectralshield-deploy
           persist-credentials: false
 
       - name: Clone latest code repo
@@ -50,7 +51,7 @@ jobs:
             echo "✅ Changes pushed to deploy repo"
           fi
 
-      - name: Enable Docker
+      - name: Set up Docker
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
@@ -71,7 +72,7 @@ jobs:
           if [ -n "${{ secrets.PORTAINER_WEBHOOK }}" ]; then
             echo "Triggering Portainer webhook..."
             curl -fsSL "${{ secrets.PORTAINER_WEBHOOK }}"
+            echo "✅ Portainer redeploy triggered"
           else
-            echo "No webhook found, skipping."
+            echo "⚠️ No webhook found, skipping redeploy."
           fi
-
