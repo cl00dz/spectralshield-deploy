@@ -67,10 +67,11 @@ jobs:
           echo "✅ Docker image built & pushed"
 
       - name: Trigger Portainer redeploy webhook
-  run: |
-    if [ -n "${{ secrets.PORTAINER_WEBHOOK }}" ]; then
-      echo "Triggering Portainer webhook..."
-      curl -fsSL "${{ secrets.PORTAINER_WEBHOOK }}"
-    else
-      echo "No webhook found, skipping."
-    fi
+        run: |
+          if [ -n "${{ secrets.PORTAINER_WEBHOOK }}" ]; then
+            echo "Triggering Portainer webhook..."
+            curl -fsSL "${{ secrets.PORTAINER_WEBHOOK }}"
+          else
+            echo "No webhook found, skipping."
+          fi
+
