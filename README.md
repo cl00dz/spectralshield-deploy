@@ -1,37 +1,17 @@
 # 🚀 SpectralShield Deployment Repository
 
-This repository automatically builds and publishes the SpectralShield Docker image.
+This repo maintains the official SpectralShield container build system.
 
-It contains the automation workflow responsible for packaging and updating the SpectralShield container image.
-
----
-
-## ✅ What this repo does
-
-| Job | Description |
-|---|---|
-🐳 Builds the SpectralShield Docker image  
-📦 Pushes the image to GitHub Container Registry (GHCR)  
-🔁 Keeps releases up to date automatically  
-
-This repo lets you **self-host SpectralShield easily** by pulling the built image.
+✅ Automatically builds Docker images  
+✅ Publishes `latest`, versioned, and commit-tag images  
+✅ Creates GitHub Releases with docker-compose included  
+✅ Supports one-command deploy via `deploy.sh`
 
 ---
 
-## 📦 Requirements
-
-To use this project:
-
-- Docker installed (if self-hosting locally)
-- GitHub account (if you want to fork & auto-build your own version)
-
----
-
-## 🧰 Getting Started
-
-### 👉 Option 1: Use our Docker image
-
-Pull the latest image:
+## 🏁 Quick Start (Self-host)
 
 ```bash
-docker pull ghcr.io/YOUR_GITHUB_USERNAME/spectralshield:latest
+git clone https://github.com/YOURUSER/spectralshield-deploy
+cd spectralshield-deploy
+./deploy.sh
