@@ -18,4 +18,20 @@ This repo lets you **self-host SpectralShield easily** by pulling the built imag
 
 ---
 
-## 📦 Requ
+## 📦 Requirements
+
+To use this project:
+
+- Docker installed (if self-hosting locally)
+- GitHub account (if you want to fork & auto-build your own version)
+
+---
+
+## 🧰 Getting Started
+
+### 👉 Option 1: Use our Docker image
+
+Pull the latest image:
+
+```bash
+docker pull ghcr.io/YOUR_GITHUB_USERNAME/spectralshield:latest
