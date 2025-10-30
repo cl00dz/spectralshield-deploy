@@ -1,6 +1,6 @@
 name: Sync Code & Deploy
 
-#on:
+# on:
 #  schedule:
 #    - cron: "*/2 * * * *"
   workflow_dispatch:
