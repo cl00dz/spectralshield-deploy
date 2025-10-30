@@ -1,8 +1,8 @@
 version: "3.8"
 services:
-  spectralshield:
-    image: ghcr.io/${GHCR_USERNAME}/spectralshield:latest
-    container_name: spectralshield
+  spectrashield:
+    image: ghcr.io/cl00dz/spectrashield:latest
+    container_name: spectrashield
     ports:
       - "${HOST_PORT:-8080}:80"
     restart: unless-stopped
