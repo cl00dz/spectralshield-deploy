@@ -16,7 +16,7 @@ jobs:
     - name: Clone latest code repo
       run: |
         rm -rf temp_code
-        git clone https://github.com/cl00dz/spectralshield-code temp_code
+        git clone https://${{ secrets.CODE_REPO_PAT }}@github.com/cl00dz/spectralshield-code temp_code
 
     - name: Sync application files (exclude Docker/CI files)
       run: |
