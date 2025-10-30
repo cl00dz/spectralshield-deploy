@@ -48,32 +48,18 @@ jobs:
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.version.outputs.new }}
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.version.outputs.sha }}
 
-      - name: Prepare deployment folder
-        run: |
-          rm -rf spectralshield
-          mkdir spectralshield
-
-          # Copy installer + compose
-          cp docker-compose.yml spectralshield/
-          cp deploy.ps1 spectralshield/
-          cp README.md spectralshield/ || true
-
-          # Copy app folder
-          cp -r app spectralshield/app
-
-      - name: Create release zip
-        run: zip -r spectralshield.zip spectralshield
-
-      - name: Create Release and Upload ZIP
+      - name: Create Release and Upload Assets
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.new }}
           name: SpectralShield ${{ steps.version.outputs.new }}
           body: |
-            ✅ Auto-built SpectralShield Release
-            📦 Fully packaged deploy bundle
-            🐳 Docker image loaded with production build
-          files: spectralshield.zip
+            ✅ Auto-built SpectralShield release
+            🧠 Docker image published to GHCR
+            📁 Raw files included for deployment
+          files: |
+            docker-compose.yml
+            deploy.ps1
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOY_REPO_PAT }}
