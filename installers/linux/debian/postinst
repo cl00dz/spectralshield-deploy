@@ -1,1 +1,5 @@
+#!/bin/sh
+set -e
+echo "SpectraShield installed. Run: spectrashield or use the desktop entry."
+exit 0
 
