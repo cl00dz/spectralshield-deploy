@@ -1,1 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=SpectraShield
+Exec=sh -c 'cd "$HOME/.local/share/spectrashield" || mkdir -p "$HOME/.local/share/spectrashield" && cp -r "$(pwd)"/* "$HOME/.local/share/spectrashield" && cd "$HOME/.local/share/spectrashield" && chmod +x deploy.sh && ./deploy.sh'
+Icon=spectrashield
+Terminal=true
+Categories=AudioVideo;Utility;
 
