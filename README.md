@@ -1,51 +1,42 @@
 # 🎧 SpectralShield — Self-Hosted Audio Watermarking Engine
 
-SpectralShield is a privacy-first, self-hosted audio watermarking engine.  
-Run it locally, keep your audio content private, and add invisible forensic watermarks to your sounds.
+SpectralShield is a privacy-first, self-hosted tool for embedding invisible watermarks into your audio files.
 
-No cloud. No data collection. Your files never leave your machine.
+Your content stays on your machine — no cloud processing, no tracking, no data collection. Ever.
 
 ---
 
 ## ✨ Features
 
-- 🔒 100% Local — no servers, no tracking
-- 🎵 Embeds invisible audio watermarks
-- 🧠 High-fidelity DSP watermarking algorithm
-- ♻️ Automatic self-updates
-- 🖥️ Works on Windows, macOS, Linux
-- 🐳 Docker powered — clean sandboxed environment
-- ⚡ Easy installer scripts — no manual setup
-- 🚀 Designed for creators, audio libraries, labels, & rights management teams
+- 🔒 100% Local — never uploads your files anywhere
+- 🎵 Invisible audio watermarking
+- 🧠 Designed for creators who need proof of authorship
+- 🖥️ Windows, macOS, and Linux support
+- 🐳 Runs inside Docker for security & isolation
+- ♻️ Self-updating deployment script
+- ⚡ Simple setup, no technical experience needed
 
 ---
 
 ## 🚀 Quick Install
 
-### ✅ **Windows (Recommended)**
+### ✅ **Windows**
 
-1. **Download ZIP**
-https://github.com/cl00dz/spectralshield-deploy/releases/latest/download/spectralshield.zip
+1) Download the latest release ZIP:  
+👉 https://github.com/cl00dz/spectralshield-deploy/releases/latest/download/spectralshield.zip
 
-2. Extract it
+2) Extract the folder
 
-3. Run:
+3) Right-click `deploy.ps1` → **Run with PowerShell**
 
-**Double-click:**
-deploy.ps1
-
-*(or Right-click → Run with PowerShell)*
-
-> The app will auto-install, auto-update, and launch itself.
+> Automatically installs, configures, and launches SpectralShield
 
 ---
 
 ### 🍏 **macOS**
 
-Open Terminal in the extracted folder and run:
+Open Terminal inside the extracted folder:
 
 ```bash
 chmod +x deploy.sh
 ./deploy.sh
-
-
