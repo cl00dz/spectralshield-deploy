@@ -1,0 +1,60 @@
+name: Sync Code & Deploy
+
+on:
+  schedule:
+    - cron: "*/2 * * * *"  # every 2 minutes
+  workflow_dispatch:
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout deploy repo
+      uses: actions/checkout@v3
+
+    - name: Clone latest code repo
+      run: |
+        rm -rf temp_code
+        git clone https://github.com/cl00dz/spectralshield-code temp_code
+
+    - name: Sync application files (exclude Docker/CI files)
+      run: |
+        mkdir -p app
+        rsync -av --delete \
+          --exclude '.git' \
+          --exclude '.github' \
+          --exclude 'Dockerfile' \
+          --exclude 'docker-compose.yml' \
+          --exclude 'README.md' \
+          temp_code/ app/
+
+    - name: Commit sync to deploy repo (only if changed)
+      run: |
+        git config user.name "CI Bot"
+        git config user.email "ci-bot@github"
+        if [ -n "$(git status --porcelain)" ]; then
+          git add app/
+          git commit -m "Sync from code repo"
+          git push
+        else
+          echo "No changes to commit."
+        fi
+
+    - name: Log in to GHCR
+      run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+
+    - name: Build & push Docker image
+      run: |
+        docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
+        docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
+
+    - name: SSH & redeploy container
+      run: |
+        echo "${{ secrets.SSH_KEY }}" > key.pem
+        chmod 600 key.pem
+        ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          cd /opt/spectralshield &&
+          docker compose pull &&
+          docker compose up -d
+        "
