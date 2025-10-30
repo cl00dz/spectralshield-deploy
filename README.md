@@ -18,17 +18,17 @@
 
 ## 🎯 Overview
 
-**SpectralShield** is an offline, self-hosted audio watermarking engine built for:
+**SpectralShield** is an offline, self-hosted audio watermarking engine for:
 
 - Music producers & labels  
 - Audio engineers & studios  
-- Content creators & podcasters  
+- Podcasters & content creators  
 
-Your audio never leaves your machine — **no cloud, no telemetry, no tracking.**
+Your files never leave your system — **no cloud, no telemetry, no tracking.**
 
 ✅ Local processing  
-✅ Forensic-grade invisible watermarking  
-✅ Fast, private, secure  
+✅ Invisible forensic watermarking  
+✅ Private & secure  
 
 ---
 
@@ -36,11 +36,11 @@ Your audio never leaves your machine — **no cloud, no telemetry, no tracking.*
 
 | Capability | Description |
 |---|---|
-🔒 100% offline | No cloud, no tracking  
+🔒 Offline only | Zero cloud dependency  
 🎵 Invisible audio watermarks | Forensic traceability  
-🪟 Windows installer | Zero-config setup  
-🐳 Docker ready | Run anywhere  
-⚙️ Configurable | Change ports/settings easily  
+🪟 PowerShell installer | Auto-provisions Docker Desktop  
+🐳 Docker runtime | Portable & isolated  
+⚙️ Auto-start | Launches Docker + runs container  
 
 ---
 
@@ -48,28 +48,17 @@ Your audio never leaves your machine — **no cloud, no telemetry, no tracking.*
 
 | Requirement | Details |
 |---|---|
-OS | Windows 10/11 or Docker-capable OS  
-Docker | Docker Desktop (Windows/macOS) or Docker Engine (Linux)  
-Port | `8080` by default  
+Platform | Windows 10/11  
+Docker | Automatically installed if missing  
+Port | Default `8080`  
 
 ---
 
-## 🚀 Installation
+## 🚀 Installation (Windows PowerShell)
 
-### 🪟 Windows — One-Click Installer
-
-1️⃣ Download the latest release:
-
-👉 https://github.com/cl00dz/spectralshield-deploy/releases
-
-2️⃣ Run `SpectralShield-Installer.exe`  
-3️⃣ Open SpectralShield from the Start Menu or Desktop shortcut  
-
-✅ Done — your local SpectralShield server is running.
-
----
-
-### ⚡ Windows — PowerShell Deployment (No EXE Installer)
+SpectralShield installs and runs itself via Docker.  
+If Docker Desktop is **not installed**, the script will **download & install it automatically**.  
+If Docker Desktop **is installed**, it will **launch it and start the SpectralShield container**.
 
 ```powershell
 git clone https://github.com/cl00dz/spectralshield-deploy.git
