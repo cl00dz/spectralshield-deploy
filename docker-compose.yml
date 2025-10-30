@@ -1,1 +1,8 @@
+services:
+  spectralshield:
+    build: .
+    container_name: spectralshield_app
+    ports:
+      - "${HOST_PORT:-8080}:80"
+    restart: unless-stopped
 
