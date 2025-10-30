@@ -1,5 +1,9 @@
 # SpectralShield Windows Deployment Script
-Write-Host "🚀 Starting SpectralShield deployment..." -ForegroundColor Cyan
+
+# Ensure script runs from its own folder (supports double-click in Explorer)
+Set-Location -Path $PSScriptRoot
+
+Write-Host "`n🚀 Starting SpectralShield deployment..." -ForegroundColor Cyan
 
 function ProgramExists {
     param($program)
@@ -18,19 +22,19 @@ if (-not $dockerInstalled) {
     
     Start-Process $installer -ArgumentList "install --quiet" -Wait
     Write-Host "✅ Docker Desktop installed" -ForegroundColor Green
-    
-    Write-Host "🔄 Launching Docker Desktop for first-time setup..." -ForegroundColor Yellow
+
+    Write-Host "🔄 Launching Docker Desktop for initial setup..." -ForegroundColor Yellow
     Start-Process "$dockerPath"
-    Write-Host "📌 You may need to reboot after Docker finishes initial setup." -ForegroundColor Magenta
+    Write-Host "📌 Reboot may be required after first Docker install" -ForegroundColor Magenta
 } else {
     Write-Host "✅ Docker Desktop already installed" -ForegroundColor Green
 }
 
 Write-Host "▶️ Starting Docker Desktop..." -ForegroundColor Yellow
-Start-Process "$dockerPath"
+Start-Process "$dockerPath" | Out-Null
 Start-Sleep -Seconds 5
 
-Write-Host "⏳ Waiting for Docker Engine to start..." -ForegroundColor Yellow
+Write-Host "⏳ Waiting for Docker Engine..." -ForegroundColor Yellow
 
 $maxRetries = 60
 $retry = 0
@@ -39,7 +43,7 @@ while ($retry -lt $maxRetries) {
     if (ProgramExists "docker") {
         docker info > $null 2>&1
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ Docker Engine Ready!" -ForegroundColor Green
+            Write-Host "✅ Docker Engine ready!" -ForegroundColor Green
             break
         }
     }
@@ -48,49 +52,52 @@ while ($retry -lt $maxRetries) {
 }
 
 if ($retry -ge $maxRetries) {
-    Write-Host "❌ Docker failed to start." -ForegroundColor Red
+    Write-Host "❌ Docker failed to start" -ForegroundColor Red
     exit 1
 }
 
+# Create .env only if missing
 if (-not (Test-Path ".env")) {
 @"
-# SpectralShield default config
 PORT=8080
-"@ | Out-File ".env"
+"@ | Out-File ".env" -Encoding UTF8
+
 Write-Host "🧾 Created default .env file" -ForegroundColor Green
 }
 
-Write-Host "📦 Pulling SpectralShield container..." -ForegroundColor Yellow
+Write-Host "📦 Pulling latest SpectralShield image..." -ForegroundColor Yellow
 docker pull ghcr.io/cl00dz/spectralshield:latest
 
-Write-Host "🚀 Starting SpectralShield container..." -ForegroundColor Yellow
+Write-Host "🚀 Launching SpectralShield container..." -ForegroundColor Yellow
 docker stop spectralshield 2>$null
 docker rm spectralshield 2>$null
 
 docker run -d `
   --name spectralshield `
   -p 8080:80 `
-  ghcr.io/cl00dz/spectralshield:latest
+  ghcr.io/cl00dz/spectralshield:latest | Out-Null
 
 Write-Host "✅ SpectralShield container running!" -ForegroundColor Green
 
+# Create shortcuts
 $desktop = [Environment]::GetFolderPath("Desktop")
 $startMenu = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs"
 
-$shortcutDesktop = "$desktop\SpectralShield.lnk"
-$shortcutMenu = "$startMenu\SpectralShield.lnk"
-
 $ws = New-Object -ComObject WScript.Shell
 
+$shortcutDesktop = "$desktop\SpectralShield.lnk"
 $sc1 = $ws.CreateShortcut($shortcutDesktop)
 $sc1.TargetPath = "http://localhost:8080"
 $sc1.Save()
 
+$shortcutMenu = "$startMenu\SpectralShield.lnk"
 $sc2 = $ws.CreateShortcut($shortcutMenu)
 $sc2.TargetPath = "http://localhost:8080"
 $sc2.Save()
 
-Write-Host "✅ Shortcuts created!" -ForegroundColor Green
+Write-Host "✅ Shortcuts created successfully" -ForegroundColor Green
 
+# Launch Browser
 Start-Process "http://localhost:8080"
-Write-Host "🎧 SpectralShield is ready at: http://localhost:8080" -ForegroundColor Cyan
+
+Write-Host "`n🎧 SpectralShield is ready at http://localhost:8080`n" -ForegroundColor Cyan
