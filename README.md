@@ -1,86 +1,66 @@
 # 🚀 SpectralShield Deploy Repository
 
-This repository handles **automated deployment** of the SpectralShield app.
+This repository automatically syncs code from the main SpectralShield repo and builds a container image on every commit.
 
-It syncs code from the main repo, builds a Docker image, pushes it to registry, and redeploys to your Portainer instance.
-
-Perfect for:
-
-- Self-hosting SpectralShield
-- Automated CI/CD deployment
-- Portainer-based homelab or production environments
+It acts as the **deployment mirror + build pipeline**, producing the container used to run SpectralShield.
 
 ---
 
-## ✅ Features
+## ✅ What this repo does
 
-| Feature | Description |
-|--------|-------------|
-🔄 **Auto-syncs from code repo** | Pulls latest code from main repo  
-🐳 **Builds Docker image** | Uses GitHub Actions + GHCR  
-☁️ **Deploys to Portainer** | Via webhook  
-🔐 **Secure** | No secrets stored in repo  
+| Job | Purpose |
+|---|---|
+🔁 Sync code from main repo | Always up to date  
+🐳 Build Docker image | Ensures new code runs in container  
+📦 Push to GitHub Container Registry | `ghcr.io/USERNAME/spectralshield:latest`  
 
 ---
 
 ## 📦 Requirements
 
-Before using, you'll need:
+Before using this:
 
-- Docker / Portainer running somewhere
-- GitHub account
-- GitHub Container Registry token
-- Portainer Webhook URL
+- Fork this repo
+- Fork the main code repo (or point to yours)
 
 ---
 
-## 🔧 Setup Instructions
+## 🔧 Setup
 
-### 1️⃣ **Fork this repo**
+### 1️⃣ Fork this repository
 
-Click 👉 **Fork** in GitHub.
+Click “Fork” at the top of the page.
 
 ---
 
-### 2️⃣ **Configure GitHub Secrets**
+### 2️⃣ Add required GitHub Secrets
 
 Go to:
 
-> **Settings → Secrets → Actions**
+**Settings → Secrets and Variables → Actions**
 
-Add these:
+Add:
 
 | Secret | Value |
-|-------|-------|
-`CODE_REPO_PAT` | GitHub PAT with repo read rights  
-`DEPLOY_REPO_PAT` | GitHub PAT with repo write rights  
+|---|---|
+`CODE_REPO_PAT` | PAT with read access to code repo  
+`DEPLOY_REPO_PAT` | PAT with write access to deploy repo  
 `GHCR_USERNAME` | Your GitHub username  
-`GHCR_TOKEN` | GHCR token (packages:write)  
-`PORTAINER_WEBHOOK` | Your Portainer webhook URL  
+`GHCR_TOKEN` | Token with `packages:write`  
 
 ---
 
-### 3️⃣ **Enable the Workflow**
+### 3️⃣ How to run
 
-In GitHub:
+Auto-runs when the `main` branch updates.
 
-> **Actions → Enable Workflow**
+Or run manually:
 
-You can then click **Run workflow** anytime.
+> GitHub → Actions → Sync Code & Build Image → **Run workflow**
 
 ---
 
-### 4️⃣ **Portainer Setup**
+### 4️⃣ Pull the image locally
 
-Create a stack in Portainer using:
-
-```yaml
-version: "3.8"
-
-services:
-  spectralshield:
-    image: ghcr.io/YOUR_GH_USERNAME/spectralshield:latest
-    container_name: spectralshield_app
-    ports:
-      - "${HOST_PORT:-8080}:80"
-    restart: unless-stopped
+```bash
+docker pull ghcr.io/YOURUSERNAME/spectralshield:latest
