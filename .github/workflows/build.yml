@@ -48,31 +48,32 @@ jobs:
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.version.outputs.new }}
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.version.outputs.sha }}
 
-    - name: Create Release and Upload Assets
-      id: create_release
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: ${{ steps.version.outputs.new }}
-        name: SpectralShield ${{ steps.version.outputs.new }}
-        body: |
-          ✅ Auto-built SpectralShield release
+      - name: Prepare deployment folder
+        run: |
+          rm -rf spectralshield
+          mkdir spectralshield
+          cp docker-compose.yml spectralshield/
+          cp deploy.ps1 spectralshield/
+          cp README.md spectralshield/ || true
 
-          Tags:
-          • `latest`
-          • `${{ steps.version.outputs.new }}`
-          • `${{ steps.version.outputs.sha }}`
-        files: |
-          docker-compose.yml
-          deploy.ps1
-      env:
-        GITHUB_TOKEN: ${{ secrets.DEPLOY_REPO_PAT }}
+      - name: Create release zip
+        run: zip -r spectralshield.zip spectralshield
 
-      - name: Upload docker-compose.yml as release asset
-        uses: actions/upload-release-asset@v1
+      - name: Create Release and Upload ZIP
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.new }}
+          name: SpectralShield ${{ steps.version.outputs.new }}
+          body: |
+            ✅ Auto-built SpectralShield release
+            📦 Includes Windows deployment package
+
+            Tags:
+            • latest
+            • ${{ steps.version.outputs.new }}
+            • ${{ steps.version.outputs.sha }}
+          files: |
+            spectralshield.zip
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOY_REPO_PAT }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./docker-compose.yml
-          asset_name: docker-compose.yml
-          asset_content_type: text/plain
