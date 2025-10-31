@@ -78,7 +78,7 @@ jobs:
 
       - name: Build Installer
         run: |
-          iscc "installers/windows/SpectralShield.iss"
+          iscc "installers/windows/wingget/SpectraShield.iss"
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
