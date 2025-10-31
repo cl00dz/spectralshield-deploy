@@ -46,8 +46,9 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/cl00dz/spectralshield-deploy:latest
-            ghcr.io/cl00dz/spectralshield-deploy:${{ env.TAG }}
+           ghcr.io/cl00dz/spectralshield-deploy:latest
+           ghcr.io/cl00dz/spectralshield-deploy:${{ env.TAG }}
+
             
       # Create offline bundle
       - name: Create release bundle

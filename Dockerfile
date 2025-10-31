@@ -1,28 +1,30 @@
-# -------------------
-# Build Frontend
-# -------------------
-FROM node:18 AS builder
+# ---------- BUILD STAGE ----------
+FROM node:20-alpine AS builder
+
 WORKDIR /app
 
-# Copy the app
-COPY app/ ./
+# Copy dependency files
+COPY package*.json ./
 
-# Install & build
-RUN npm install && npm run build
+# Install deps
+RUN npm install
 
-# -------------------
-# NGINX Stage
-# -------------------
+# Copy rest of project
+COPY . .
+
+# Build the frontend (Vite)
+RUN npm run build
+
+# ---------- RUNTIME STAGE ----------
 FROM nginx:alpine
 
-# Remove default nginx website
+# Remove default nginx site
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy built app to nginx web root
+# Copy build output
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port
-EXPOSE 80
+# Expose web port
+EXPOSE 8080
 
-# Start NGINX
 CMD ["nginx", "-g", "daemon off;"]

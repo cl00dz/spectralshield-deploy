@@ -3,7 +3,7 @@ services:
     container_name: spectralshield
     image: ghcr.io/cl00dz/spectralshield-deploy:latest
     ports:
-      - "8080:8080"
+      - "8080:80"
     volumes:
       - spectralshield_data:/app/.data
     restart: unless-stopped
