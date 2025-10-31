@@ -11,6 +11,7 @@ permissions:
   packages: write
 
 jobs:
+
   build-docker:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
@@ -27,7 +28,6 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Extract version tag
-        id: get_version
         run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build and push Docker image
@@ -37,13 +37,14 @@ jobs:
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ env.TAG }}
 
+
   build-installer:
     name: Build Windows Installer
     needs: build-docker
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout deploy repo
         uses: actions/checkout@v3
 
       - name: Restore version tag
@@ -52,8 +53,14 @@ jobs:
       - name: Install Inno Setup
         run: choco install innosetup -y
 
-      - name: Verify ISCC path
-        run: where iscc
+      - name: Clone Google AI Studio Code Repo
+        run: |
+          git clone https://${{ secrets.CODE_REPO_PAT }}@github.com/cl00dz/spectralshield-code.git app-source
+
+      - name: Verify files pulled
+        run: |
+          echo "Listing app-source directory:"
+          dir app-source
 
       - name: Build Installer
         run: |
