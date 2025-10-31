@@ -1,0 +1,63 @@
+name: Release SpectralShield
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Determine version
+      id: version
+      run: |
+        echo "tag=${GITHUB_REF#refs/tags/}" >> $env:GITHUB_OUTPUT
+
+    - name: Install Docker
+      uses: crazy-max/ghaction-chocolatey@v1
+      with:
+        args: install docker-desktop -y
+
+    - name: Start Docker Desktop
+      run: |
+        Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+        Start-Sleep 15
+
+    - name: Login to GHCR
+      run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+
+    - name: Build and push image
+      run: |
+        docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
+        docker tag ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.version.outputs.tag }}
+        docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
+        docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.version.outputs.tag }}
+
+    - name: Install Inno Setup
+      run: choco install innosetup -y
+
+    - name: Build Installer
+      run: |
+        cd installers/windows
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" SpectralShield.iss
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.version.outputs.tag }}
+        files: |
+          deploy.ps1
+          docker-compose.yml
+          installers/windows/SpectralShield-Installer.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.DEPLOY_REPO_PAT }}
