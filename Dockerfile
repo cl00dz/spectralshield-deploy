@@ -1,30 +1,30 @@
-# ---------- BUILD STAGE ----------
-FROM node:20-alpine AS builder
-
+# ---- Build Stage ----
+FROM node:20 AS builder
 WORKDIR /app
 
-# Copy dependency files
-COPY package*.json ./
+# Copy package files first for caching
+COPY app/package*.json ./
 
-# Install deps
 RUN npm install
 
-# Copy rest of project
-COPY . .
+# Copy the rest of your app source
+COPY app/ .
 
-# Build the frontend (Vite)
+# Build your Vite/React app
 RUN npm run build
 
-# ---------- RUNTIME STAGE ----------
+
+# ---- Run Stage ----
 FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
 
-# Remove default nginx site
-RUN rm -rf /usr/share/nginx/html/*
+# Copy built assets from builder
+COPY --from=builder /app/dist ./
 
-# Copy build output
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Replace default config to support SPA routing
+RUN rm -rf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose web port
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
