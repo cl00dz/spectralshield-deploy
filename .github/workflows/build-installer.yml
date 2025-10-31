@@ -1,0 +1,36 @@
+name: Build Windows Installer
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-installer:
+    name: Build Installer EXE
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup -y
+
+      - name: Build SpectralShield Installer
+        run: |
+          cd installers/windows
+          iscc SpectralShield.iss
+
+      - name: Upload Installer to Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: installers/windows/SpectralShield-Installer.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_REPO_PAT }}
