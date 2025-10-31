@@ -22,10 +22,11 @@ jobs:
         run: |
           choco install innosetup -y
 
-      - name: Build SpectralShield Installer
-        run: |
-          cd installers/windows
-          iscc SpectralShield.iss
+- name: Build SpectralShield Installer
+  run: |
+    cd spectralshield/installers/windows
+    & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" SpectralShield.iss
+
 
       - name: Upload Installer to Release
         uses: softprops/action-gh-release@v2
