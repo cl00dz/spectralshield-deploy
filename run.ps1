@@ -1,73 +1,66 @@
-Write-Host "🚀 Starting SpectralShield Offline WebUI..."
+Write-Host "`n🚀 Starting SpectralShield Offline WebUI..."
+
+# Move to script directory so docker-compose.yml is found
+Set-Location -Path (Split-Path -Parent $MyInvocation.MyCommand.Definition)
 
 # Paths
 $DockerExe = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 $InstallerPath = "$env:TEMP\DockerDesktopInstaller.exe"
+$LogFile = "C:\ProgramData\DockerDesktop\install-log.txt"
 
-# Function: Install Docker Desktop silently
 function Install-DockerDesktop {
-    Write-Host "📦 Downloading Docker Desktop Installer..."
+    Write-Host "📦 Downloading Docker Desktop installer..."
     Invoke-WebRequest -Uri "https://desktop.docker.com/win/main/amd64/Docker Desktop Installer.exe" -OutFile $InstallerPath
 
-    Write-Host "⚙️ Installing Docker Desktop silently (this may take a few minutes)..."
+    Write-Host "⚙️ Installing Docker Desktop silently..."
     Start-Process $InstallerPath -ArgumentList "install", "--quiet" -Wait
 
     Write-Host "✅ Docker Desktop installation completed!"
 
-    # Detect if reboot required
-    if (Test-Path "C:\ProgramData\DockerDesktop\install-log.txt") {
-        $log = Get-Content "C:\ProgramData\DockerDesktop\install-log.txt"
+    if (Test-Path $LogFile) {
+        $log = Get-Content $LogFile
         if ($log -match "(?i)reboot required|restart required") {
-            Write-Warning "🔄 Docker Desktop requires a system reboot to complete setup."
-            $choice = Read-Host "Would you like to reboot now? (Y/N)"
+            Write-Warning "🔄 Docker Desktop requires a system reboot."
+            $choice = Read-Host "Reboot now? (Y/N)"
             if ($choice -match "^[Yy]$") {
-                Write-Host "🔁 Rebooting system..."
                 Restart-Computer
             } else {
-                Write-Host "⚠️ Please reboot manually before running this script again."
+                Write-Host "⚠️ Please reboot before running again."
                 Read-Host "Press Enter to exit"
-                exit 1
+                exit
             }
         }
     }
 }
 
-
-# ✅ Check if Docker Desktop is installed
+# Check for Docker Desktop
 if (-not (Test-Path $DockerExe)) {
     Write-Warning "🐋 Docker Desktop is not installed."
-
     $choice = Read-Host "Install Docker Desktop automatically? (Y/N)"
     if ($choice -match "^[Yy]$") {
         Install-DockerDesktop
     } else {
-        Write-Host "❌ Docker Desktop is required. Install from:"
-        Write-Host "➡ https://www.docker.com/products/docker-desktop/"
+        Write-Host "❌ Docker Desktop required. Download from https://www.docker.com"
         Read-Host "Press Enter to exit"
-        exit 1
+        exit
     }
 }
 
-
-# ✅ Ensure Docker runs
+# Ensure Docker is running
 Write-Host "⏳ Checking Docker status..."
-
 docker info 2>$null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "🐋 Starting Docker Desktop..."
     Start-Process $DockerExe
-    
-    $max = 60; $i = 0
 
-    while ($i -lt $max) {
-        Start-Sleep 2
+    for ($i = 0; $i -lt 60; $i++) {
+        Start-Sleep -Seconds 2
         docker info 2>$null
         if ($LASTEXITCODE -eq 0) {
             Write-Host "✅ Docker is ready!"
             break
         }
-        Write-Host "⌛ Waiting for Docker... ($i/$max)"
-        $i++
+        Write-Host "⌛ Waiting for Docker... ($i/60)"
     }
 
     if ($LASTEXITCODE -ne 0) {
@@ -76,14 +69,13 @@ if ($LASTEXITCODE -ne 0) {
     }
 }
 
-
-# ✅ Pull & launch container
-Write-Host "📦 Pulling SpectralShield image..."
+# Run Docker Compose
+Write-Host "📦 Pulling latest SpectralShield image..."
 docker compose pull
 
 Write-Host "🚀 Launching SpectralShield..."
 docker compose up -d
 
-Write-Host "✅ SpectralShield is running!"
-Write-Host "➡ Open in browser: http://localhost:8080"
-Read-Host "Press Enter to exit"
+Write-Host "`n✅ SpectralShield is running!"
+Write-Host "➡️  Open in your browser: http://localhost:8080"
+Read-Host "Press Enter to exit..."
