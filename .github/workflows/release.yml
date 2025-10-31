@@ -11,13 +11,15 @@ permissions:
   packages: write
 
 jobs:
-
   build-docker:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
 
+    outputs:
+      tag: ${{ steps.get_tag.outputs.tag }}
+
     steps:
-      - name: Checkout deploy repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Login to GHCR
@@ -28,21 +30,21 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Extract version tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        id: get_tag
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Download built web app
+      - name: Download built web app artifact
         uses: actions/download-artifact@v4
         with:
           name: spectralshield-web-build
           path: app
 
-      - name: Build and push Docker image
+      - name: Build & Push Docker Images
         run: |
           docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest .
-          docker tag ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ env.TAG }}
+          docker tag ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.get_tag.outputs.tag }}
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:latest
-          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ env.TAG }}
-
+          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/spectralshield:${{ steps.get_tag.outputs.tag }}
 
   build-installer:
     name: Build Windows Installer
@@ -50,11 +52,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout deploy repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Restore version tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      - name: Set TAG env
+        run: echo "TAG=${{ needs.build-docker.outputs.tag }}" >> $env:GITHUB_ENV
+        shell: pwsh
 
       - name: Install Inno Setup
         run: choco install innosetup -y
@@ -65,16 +68,16 @@ jobs:
           name: spectralshield-web-build
           path: app
 
-      - name: Debug file paths
+      - name: Debug paths
         run: |
-          echo "=== Working Dir ==="
-          echo $pwd
-          echo "=== /installers/windows contents ==="
-          dir installers/windows
+          Write-Host "=== Working Dir ==="
+          Get-Location
+          Write-Host "=== installer dir contents ==="
+          Get-ChildItem installers/windows -Recurse
+        shell: pwsh
 
       - name: Build Installer
-        run: |
-          iscc "installers/windows/SpectralShield.iss"
+        run: iscc "installers/windows/SpectralShield.iss"
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
@@ -85,4 +88,4 @@ jobs:
             docker-compose.yml
             installers/windows/Output/SpectralShield-Installer.exe
         env:
-          GITHUB_TOKEN: ${{ secrets.DEPLOY_REPO_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}
