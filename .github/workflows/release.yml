@@ -56,7 +56,21 @@ jobs:
       - name: Clone Google AI Studio Code Repo
         run: |
           git clone https://${{ secrets.CODE_REPO_PAT }}@github.com/cl00dz/spectralshield-code.git app-source
-
+     
+      - name: Debug folder structure
+        run: |
+             echo "=== WORKING DIRECTORY ==="
+              echo $pwd
+             echo ""
+              echo "=== ROOT DIRECTORY CONTENTS ==="
+             dir
+              echo ""
+              echo "=== installers/windows CONTENTS ==="
+              dir installers/windows
+              echo ""
+              echo "=== app-source CONTENTS ==="
+              dir app-source
+              
       - name: Verify files pulled
         run: |
           echo "Listing app-source directory:"
