@@ -1,8 +1,12 @@
-version: "3.9"
 services:
-  spectrashield:
-    image: ghcr.io/cl00dz/spectralshield:latest
-    container_name: spectrashield
+  spectralshield:
+    container_name: spectralshield
+    image: ghcr.io/cl00dz/spectralshield-deploy:latest
     ports:
-      - "${HOST_PORT:-8080}:80"
+      - "8080:8080"
+    volumes:
+      - spectralshield_data:/app/.data
     restart: unless-stopped
+
+volumes:
+  spectralshield_data:
