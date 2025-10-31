@@ -51,8 +51,7 @@ jobs:
 
       - name: Build Installer
         run: |
-          cd installers/windows
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" SpectralShield.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installers/windows/SpectralShield.iss"
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
