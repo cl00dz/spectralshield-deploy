@@ -46,16 +46,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Restore version tag
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Install Inno Setup
         run: choco install innosetup -y
 
+      - name: Verify ISCC path
+        run: where iscc
+
       - name: Build Installer
         run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installers/windows/SpectralShield.iss"
+          iscc "installers/windows/SpectralShield.iss"
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.TAG }}
           files: |
             deploy.ps1
             docker-compose.yml
